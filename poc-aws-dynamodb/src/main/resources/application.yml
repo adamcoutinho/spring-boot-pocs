@@ -1,0 +1,6 @@
+amazon:
+  region: eu-west-1
+  dynamodb:
+    endpoint: ${AWS_ENDPOINT:http://localhost:4566/}
+    access-key: ${ACCESS_KEY:macking_key}
+    secret-key: ${SECRET_KEY:macking_user}

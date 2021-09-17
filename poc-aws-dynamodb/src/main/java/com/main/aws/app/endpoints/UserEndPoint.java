@@ -5,5 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/")
-public class DynamoDbEndpoint {
+public class UserEndPoint {
+
+
+
 }
