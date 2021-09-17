@@ -1,0 +1,12 @@
+spring.servlet.multipart:
+  max-file-size: 10MB
+  max-request-size: 10MB
+
+amazon:
+  region: eu-west-1
+  s3:
+    bucket-name: ${AWS_BUCKET_NAME:app-web}
+    endpoint: ${AWS_ENDPOINT:http://localhost:4566/}
+    access-key: ${ACCESS_KEY:macking_key}
+    secret-key: ${SECRET_KEY:macking_user}
+
