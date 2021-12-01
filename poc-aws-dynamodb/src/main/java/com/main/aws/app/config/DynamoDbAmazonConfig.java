@@ -4,10 +4,9 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,30 +14,25 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DynamoDbAmazonConfig {
 
-
-
     @Value("${amazon.dynamodb.access-key}")    private String AWS_ACCESS_KEY;
     @Value("${amazon.dynamodb.secret-key}")    private String AWS_SECRET_KEY;
-    @Value("${amazon.dynamodb.endpoint}")      private String URL_AMAZON_S3;
+    @Value("${amazon.dynamodb.endpoint}")      private String URL_AMAZON_DB;
     @Value("${amazon.region}")                 private String REGION;
 
-
-
     @Bean
-    public DynamoDBMapperConfig dynamoDBMapperConfig() {
-        return DynamoDBMapperConfig.DEFAULT;
+    public DynamoDBMapper dynamoDBMapper() {
+        return new DynamoDBMapper(amazonDbConfigure());
     }
-
     private String toCredentials() {
-        return "{ \naccess-key:"+this.AWS_ACCESS_KEY+",\nsecret-key:"+this.AWS_SECRET_KEY+",\nurl-amazon:"+this.URL_AMAZON_S3+",\nregion:"+this.REGION+"\n}";
+        return "{  \naccess-key:"+this.AWS_ACCESS_KEY+",\nsecret-key:"+this.AWS_SECRET_KEY+",\nurl-amazon:"+this.URL_AMAZON_DB+",\nregion:"+this.REGION+"\n}";
     }
 
     private EndpointConfiguration getEndpointConfiguration() {
 
-        return new EndpointConfiguration(this.URL_AMAZON_S3, this.REGION);
+        return new EndpointConfiguration(this.URL_AMAZON_DB, this.REGION);
     }
     @Bean
-    public AmazonDynamoDB amazonS3Configure() {
+    public AmazonDynamoDB amazonDbConfigure() {
         System.out.println(toCredentials());
         return AmazonDynamoDBClientBuilder
                 .standard()
@@ -46,6 +40,7 @@ public class DynamoDbAmazonConfig {
                 .withCredentials(new AWSStaticCredentialsProvider(getBasicAWSCredentials()))
                 .build();
     }
+
     private AWSStaticCredentialsProvider getCredentialsProvider() {
 
         return new AWSStaticCredentialsProvider(getBasicAWSCredentials());
@@ -55,4 +50,5 @@ public class DynamoDbAmazonConfig {
 
         return new BasicAWSCredentials(this.AWS_ACCESS_KEY, this.AWS_SECRET_KEY);
     }
+
 }

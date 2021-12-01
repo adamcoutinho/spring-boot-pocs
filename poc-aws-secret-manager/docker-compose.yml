@@ -1,0 +1,46 @@
+version: '3.5'
+services:
+  localstack:
+    image: localstack/localstack
+    hostname: localstack
+    ports:
+      - "4566-4599:4566-4599"
+      - "8055:8080"
+    env_file:
+      - .env
+    environment:
+      SERVICES: secretsmanager
+      DATA_DIR: /tmp/localstack/data
+      HOST_TMP_FOLDER: /tmp/localstack
+      LOCALSTACK_HOSTNAME: localstack
+      HOSTNAME_EXTERNAL: localstack
+      LAMBDA_EXECUTOR: docker
+      LAMBDA_DOCKER_NETWORK: host
+      START_WEB: 1
+      USE_SSL: "false"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4566" ]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - "localstack:/tmp/localstack"
+    depends_on:
+      - aws-cli_secret_test
+  aws-cli_secret_test:
+    image: amazon/aws-cli
+    command: >
+      --endpoint-url=http://localstack:4566 secretsmanager create-secret
+        --name "/credentials/aws/app"
+        --description "Client Secret"
+        --secret-string "{\"userName\":\"7a1e3dc3-5a1e-424f-b45f-70b6d61f6af8\",\"password\":\"a7c50077-8d82-44e6-b466-3ad0d6472192\"}"
+    restart: on-failure
+    env_file:
+      - .env
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  localstack:
+    external: false

@@ -1,15 +1,13 @@
-services:
-  dynamodb-local:
-    image: amazon/dynamodb-local:latest
-    container_name: dynamodb-local
-    ports:
-      - "8000:8000"
+version: '3.5'
 
-  dynamodb-admin:
-    image: aaronshaf/dynamodb-admin
-    ports:
-      - "8001:8001"
+services:
+  dynamodb:
+    image: localstack/localstack:0.12.5
     environment:
-      DYNAMO_ENDPOINT: "http://dynamodb-local:8000"
-    depends_on:
-      - dynamodb-local
+      - SERVICES=dynamodb
+      - DEBUG=1
+      - DEFAULT_REGION=eu-west-1
+      - AWS_ACCESS_KEY_ID=macking_key
+      - AWS_SECRET_ACCESS_KEY=macking_user
+    ports:
+      - '4566:4566'
