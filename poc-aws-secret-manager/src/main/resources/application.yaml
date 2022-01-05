@@ -1,0 +1,16 @@
+
+
+amazon:
+  region: eu-west-1
+  aws-secret-manager:
+    endpoint: ${AWS_ENDPOINT:http://localhost:4566/}
+    aws-secret: ${AWS_SECRET_MANAGER:/credentials/aws/app }
+    access-key: ${ACCESS_KEY:macking_key}
+    secret-key: ${SECRET_KEY:macking_user}
+
+logging:
+  level:
+    org:
+      springframework:
+        boot:
+          autoconfigure: ERROR
